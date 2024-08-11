@@ -6,6 +6,7 @@ import { Alert, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } fr
 enum STATE {
     "motorist", 
     "vehicle",
+    "manually",
     "auth"
 }
 
@@ -37,11 +38,11 @@ export const Cam = () => {
                 Alert.alert("Aviso", `Motorista não autorizado`, [
                     {
                         text: "Tentar novamente",
-                        onPress: () => {}
+                        onPress: () => tryAgain()
                     },
                     {
                         text: "Manualmente",
-                        onPress: () => {}
+                        onPress: () => manually()
                     }
                 ]);   
             }
@@ -73,7 +74,7 @@ export const Cam = () => {
                     },
                     {
                         text: "Manualmente",
-                        onPress: () => {}
+                        onPress: () => manually()
                     }
                 ]);   
             }
@@ -98,6 +99,11 @@ export const Cam = () => {
         setScan(null);
         setFlag(STATE.auth)
         console.log("dados do veiculo ", vehicle)
+    }
+
+    const manually = () => {
+        setScan(null);
+        setFlag(STATE.manually)
     }
 
     const handleSubmitDataAuth = async () => {
@@ -142,6 +148,23 @@ export const Cam = () => {
                             <Text>See this thing - Veiculo</Text>
                         </View>
                     </CameraView>
+                ) : flag === STATE.manually ? (
+                    <View style={style.viewAuth}>
+                        <Text>Manually</Text>
+                        <View style={style.inputManualy}>
+                            <TextInput style={style.input} value={motorist} onChangeText={setMotorist} keyboardType="decimal-pad" placeholder="Número do Motorista"/>
+                            <TextInput style={style.input} value={vehicle} onChangeText={setVehicle} keyboardType="decimal-pad" placeholder="Numero do Veiculo"/>
+                        </View>
+                        
+                        <View style={style.viewBtnManualy}>
+                            <Button onPress={()=> setFlag(STATE.motorist)} title="Scannear"/>
+                            <Button onPress={()=> setFlag(STATE.auth)} title="Verificar"/>
+                        </View>
+                        <Text> --------------------------------- </Text>
+                        <Text style={style.text}>Motorista: {motorist}</Text>
+                        <Text style={style.text}>Carro: {vehicle}</Text>
+                                                
+                    </View>
                 ) : (
                     <View style={style.viewAuth}>
                         <Text style={style.text}>Motorista: {motorist}</Text>
@@ -190,5 +213,17 @@ const style = StyleSheet.create({
         width: '70%',
         padding: 8,
         fontSize: 14
+    },
+    inputManualy: {
+        alignItems: "center",
+        width: 500,
+        gap: 10
+    },
+    viewBtnManualy: {
+        display: "flex",
+        flexDirection: "row",
+        gap: 100,
+        marginVertical: 10,
+        justifyContent: "space-between"
     }
 })
